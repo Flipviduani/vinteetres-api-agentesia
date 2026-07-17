@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: vinteetres-api-agentesia
+
+  mongodb:
+    host: localhost
+    port: 27018
+    database: bd-agentesia
+    username: vidu
+    password: vidu
+    authentication-database: admin
+
+server:
+  port: 8084
+
+openai:
+  apikey:
+  model: gpt-4o-mini

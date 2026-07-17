@@ -1,0 +1,61 @@
+services:
+  mongodb:
+    image: mongo:8
+    container_name: vinteetres-api-agentesia-mongodb
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: vidu
+      MONGO_INITDB_ROOT_PASSWORD: vidu
+      MONGO_INITDB_DATABASE: bd-agentesia
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - agentesia-network
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: vinteetres-api-agentesia-mongo-express
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+    ports:
+      - "5058:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: vidu
+      ME_CONFIG_MONGODB_ADMINPASSWORD: vidu
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_BASICAUTH_USERNAME: vidu
+      ME_CONFIG_BASICAUTH_PASSWORD: vidu
+    volumes:
+      - mongo_express_data:/data
+    networks:
+      - agentesia-network
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: vinteetres-api-agentesia-mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025" # SMTP
+      - "8025:8025" # Interface Web
+    volumes:
+      - mailhog_data:/maildir
+    networks:
+      - agentesia-network
+
+volumes:
+  mongodb_data:
+    driver: local
+
+  mongo_express_data:
+    driver: local
+
+  mailhog_data:
+    driver: local
+
+networks:
+  agentesia-network:
+    driver: bridge
